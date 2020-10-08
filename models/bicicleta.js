@@ -11,6 +11,7 @@ Bicicleta.prototype.toString = function() {
 
 
 Bicicleta.allBicis = [];
+
 Bicicleta.add = function(aBici) {
     Bicicleta.allBicis.push(aBici);
 }
