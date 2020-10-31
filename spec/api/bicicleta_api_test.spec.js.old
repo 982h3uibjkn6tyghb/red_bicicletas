@@ -1,0 +1,107 @@
+var Bicicleta = require('../../models/bicicleta');
+var request = require('request');
+const { bicicleta_update } = require('../../controllers/api/bicicletaControllerAPI');
+// var server = require('../../bin/www');
+
+
+
+beforeEach(() => {
+    Bicicleta.allBicis = [];
+});
+
+
+describe('Bicicleta API', () => {
+    // console.log('GET TEST'); //debug
+    describe('GET BICICLETAS /', () => {
+        it('Status 200', () => {
+            expect(Bicicleta.allBicis.length).toBe(0);
+
+            var a = new Bicicleta('1', 'rojo', 'urbano', [-34.60122424, -58.3861497]);
+            Bicicleta.add(a);
+
+            request.get('http://locaclhost:3000/api/bicicletas', function(error, response, body) {
+                expect(response.statusCode).toBe(200);
+            });
+        });
+    });
+
+
+    describe('POST BICICLETAS /create', () => {
+        // console.log('CREATE TEST'); //debug
+        it('STATUS 200', (done) => {
+            expect(Bicicleta.allBicis.length).toBe(0);
+
+            var headers = { 'content-type': 'application/json' };
+            var Bici = '{ "id": 2, "color": "azul", "modelo": "urbana", "lat": -34, "lng": -54 }';
+            Bicicleta.add(Bici);
+
+            request.post({
+                headers: headers,
+                url: 'http://localhost:3000/api/bicicletas/create',
+                body: Bici
+            }, function(error, response, body) {
+                expect(Bicicleta.allBicis.length).toBe(1);
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+        });
+    });
+
+
+    describe('UPDATE BICICLETAS /update', () => {
+        // console.log('UPDATE TEST'); //debug
+        it('Status 200', (done) => {
+            expect(Bicicleta.allBicis.length).toBe(0);
+
+            //Crea una bici
+            var headers = { 'content-type': 'application/json' };
+            var Bici = '{ "id": 3, "color": "no informa", "modelo": "no informa", "lat": 0, "lng": 0 }';
+            Bicicleta.add(Bici);
+            request.post({
+                headers: headers,
+                url: 'http://localhost:3000/api/bicicletas/create',
+                body: Bici
+            }, function(error, response, body) {
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+            //Actualiza los datos
+            expect(Bicicleta.allBicis.length).toBe(1);
+            var updBici = '{ "id": 3, "color": "verde-mod", "modelo": "mondial", "lat": -34, "lng": -52 }';
+            request.post({
+                headers: headers,
+                url: 'http://localhost:3000/api/bicicletas/update',
+                body: updBici
+            }, function(error, response, body) {
+                Bicicleta.updateById(updBici);
+                expect(Bicicleta.findById(3).color).toBe("verde-mod");
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+        });
+    });
+
+
+    describe('DELETE BICICLETAS /delete', () => {
+        // console.log('DELETE TEST'); //debug
+        it('Status 200', () => {
+            expect(Bicicleta.allBicis.length).toBe(0);
+
+            var headers = { 'content-type': 'application/json' };
+            var aBici1 = '{ "id": 4, "color": "amarillo", "modelo": "urbana", "lat": -34, "lng": -54 }';
+            Bicicleta.add(aBici1);
+
+            request.post({
+                headers: headers,
+                url: 'http://localhost:3000/api/bicicletas/create',
+                body: aBici1
+            }, function(error, response, body) {
+                Bicicleta.removeById(4);
+                expect(Bicicleta.allBicis.length).toBe(0);
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+        });
+    });
+
+});
