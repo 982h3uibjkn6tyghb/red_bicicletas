@@ -8,7 +8,7 @@ var base_url = "http://localhost:3000/api/bicicletas";
 
 describe('Bicicleta API', () => {
     beforeEach(function(done) {
-        var mongoDB = 'mongodb://localhost/red_bicicletas';
+        var mongoDB = 'mongodb+srv://redBici:IlzI5Vv5Bf3Kjua7@cluster0.aqw1v.mongodb.net/testdb';
         mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
         const db = mongoose.connection;
@@ -61,38 +61,38 @@ describe('Bicicleta API', () => {
     });
 
 
-    // describe('UPDATE BICICLETAS /update', () => {
-    //     // console.log('UPDATE TEST'); //debug
-    //     it('Status 200', (done) => {
-    //         expect(Bicicleta.allBicis.length).toBe(0);
+    describe('UPDATE BICICLETAS /update', () => {
+        // console.log('UPDATE TEST'); //debug
+        it('Status 200', (done) => {
+            expect(Bicicleta.allBicis.length).toBe(0);
 
-    //         //Crea una bici
-    //         var headers = { 'content-type': 'application/json' };
-    //         var Bici = '{ "id": 3, "color": "no informa", "modelo": "no informa", "lat": 0, "lng": 0 }';
-    //         Bicicleta.add(Bici);
-    //         request.post({
-    //             headers: headers,
-    //             url: 'http://localhost:3000/api/bicicletas/create',
-    //             body: Bici
-    //         }, function(error, response, body) {
-    //             expect(response.statusCode).toBe(200);
-    //             done();
-    //         });
-    //         //Actualiza los datos
-    //         expect(Bicicleta.allBicis.length).toBe(1);
-    //         var updBici = '{ "id": 3, "color": "verde-mod", "modelo": "mondial", "lat": -34, "lng": -52 }';
-    //         request.post({
-    //             headers: headers,
-    //             url: 'http://localhost:3000/api/bicicletas/update',
-    //             body: updBici
-    //         }, function(error, response, body) {
-    //             Bicicleta.updateById(updBici);
-    //             expect(Bicicleta.findById(3).color).toBe("verde-mod");
-    //             expect(response.statusCode).toBe(200);
-    //             done();
-    //         });
-    //     });
-    // });
+            //Crea una bici
+            var headers = { 'content-type': 'application/json' };
+            var Bici = '{ "id": 3, "color": "no informa", "modelo": "no informa", "lat": 0, "lng": 0 }';
+            Bicicleta.add(Bici);
+            request.post({
+                headers: headers,
+                url: 'http://localhost:3000/api/bicicletas/create',
+                body: Bici
+            }, function(error, response, body) {
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+            //Actualiza los datos
+            expect(Bicicleta.allBicis.length).toBe(1);
+            var updBici = '{ "id": 3, "color": "verde-mod", "modelo": "mondial", "lat": -34, "lng": -52 }';
+            request.post({
+                headers: headers,
+                url: 'http://localhost:3000/api/bicicletas/update',
+                body: updBici
+            }, function(error, response, body) {
+                Bicicleta.updateById(updBici);
+                expect(Bicicleta.findById(3).color).toBe("verde-mod");
+                expect(response.statusCode).toBe(200);
+                done();
+            });
+        });
+    });
 
 
     describe('DELETE BICICLETAS /delete', () => {
@@ -100,27 +100,24 @@ describe('Bicicleta API', () => {
         it('Status 204', (done) => {
             var a = Bicicleta.createInstance(1, 'negro', 'urbana', [-34.6012424, -58.3861]);
             Bicicleta.add(a, function(err, newBici) {
+                if (err) console.error(err);
                 var headers = { 'content-type': 'application/json' };
-
+                var bici = '{ "code": 1 }';
+                request.delete({
+                    headers: headers,
+                    url: base_url + "/delete",
+                    body: bici
+                }, function(error, response, body) {
+                    expect(response.statusCode).toBe(204);
+                    Bicicleta.findByCode(1, function(err, targetBici) {
+                        expect(targetBici).toBe(null);
+                        done();
+                    });
+                });
             });
-
-
-
-
-            // var aBici1 = '{ "id": 4, "color": "amarillo", "modelo": "urbana", "lat": -34, "lng": -54 }';
-            // Bicicleta.add(aBici1);
-
-            // request.post({
-            //     headers: headers,
-            //     url: 'http://localhost:3000/api/bicicletas/create',
-            //     body: aBici1
-            // }, function(error, response, body) {
-            //     Bicicleta.removeById(4);
-            //     expect(Bicicleta.allBicis.length).toBe(0);
-            //     expect(response.statusCode).toBe(200);
-            //     done();
-            // });
         });
     });
+
+
 
 });

@@ -6,7 +6,7 @@ var Reserva = require('../../models/reserva');
 
 describe('Testing Bicicletas', function() {
     beforeEach(function(done) {
-        var mongoDB = 'mongodb://localhost/red_bicicletas';
+        var mongoDB = 'mongodb+srv://redBici:IlzI5Vv5Bf3Kjua7@cluster0.aqw1v.mongodb.net/testdb';
         mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
         const db = mongoose.connection;
