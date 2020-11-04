@@ -152,17 +152,21 @@ app.post('/resetPassword', function(req, res) {
 
 
 
-app.use('/', indexRouter);
-// app.use('/users', usersRouter);
 app.use('/usuarios', usuariosRouter);
 app.use('/token', tokenRouter);
-
 
 app.use('/bicicletas', loggedIn, bicicletasRouter);
 
 app.use('/api/auth', authAPIRouter);
 app.use('/api/bicicletas', validarUsuario, bicicletasAPIRouter);
 app.use('/api/usuarios', usuariosAPIRouter);
+
+app.use('/privacy_policy', function(req, res) {
+    res.sendFile('public/policy_privacy.html');
+});
+
+
+app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
