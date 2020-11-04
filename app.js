@@ -165,6 +165,10 @@ app.use('/privacy_policy', function(req, res) {
     res.sendFile('public/policy_privacy.html');
 });
 
+app.use('/google6022dca3fbf5607f', function(req, res) {
+    res.sendFile('public/google6022dca3fbf5607f.html');
+});
+
 
 app.use('/', indexRouter);
 
