@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -41,8 +43,12 @@ var mongoose = require('mongoose');
 const usuario = require('./models/usuario');
 // const { Token } = require('morgan');
 
+// Desarrollo
 // var mongoDB = 'mongodb://localhost/red_bicicletas';
-var mongoDB = 'mongodb+srv://redBici:IlzI5Vv5Bf3Kjua7@cluster0.aqw1v.mongodb.net/red_bicicletas';
+
+// Produccion
+// var mongoDB = 'mongodb+srv://redBici:IlzI5Vv5Bf3Kjua7@cluster0.aqw1v.mongodb.net/red_bicicletas';
+var mongoDB = process.env.MONGO_URI;
 mongoose.connect(mongoDB, { userNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
 var db = mongoose.connection;
@@ -135,8 +141,8 @@ app.post('/resetPassword', function(req, res) {
         usuario.password = req.body.password;
         usuario.save(function(err) {
             if (err) {
-                res.render('session/resetPassword', (errors: err.errors, usuario: new Usuario({ email: req.body.email })
-                });
+                // res.render('session/resetPassword', (errors: err.errors, usuario: new Usuario({ email: req.body.email })
+                // });
             } else {
                 res.redirect('/login');
             }
