@@ -34,9 +34,8 @@ if (process.env.NODE_ENV === 'development') {
     });
     // store.on('error', function(error) {
     store.on('error', function(error) {
-        assert.ifError(error);
+        // assert.ifError(error);
         assert.ok(false);
-        done();
     });
 }
 
