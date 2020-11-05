@@ -23,6 +23,8 @@ const Token = require('./models/token');
 
 
 // const store = new session.MemoryStore;
+const { assert } = require('console');
+
 
 let store;
 if (process.env.NODE_ENV === 'development') {
@@ -34,15 +36,13 @@ if (process.env.NODE_ENV === 'development') {
     });
     // store.on('error', function(error) {
     store.on('error', function(error) {
-        // assert.ifError(error);
+        assert.ifError(error);
         assert.ok(false);
     });
 }
 
 let app = express();
 app.set('secretKey', 'jwt_pwd_!!223344');
-
-
 // var app = express();
 app.use(session({
     cookie: { maxAge: 240 * 60 * 60 * 1000 },
@@ -55,7 +55,7 @@ app.use(session({
 // MongoDB Setup
 var mongoose = require('mongoose');
 const usuario = require('./models/usuario');
-const { assert } = require('console');
+// const { assert } = require('console');
 // const { Token } = require('morgan');
 
 // Desarrollo
