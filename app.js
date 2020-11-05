@@ -26,11 +26,11 @@ const Token = require('./models/token');
 
 let store;
 if (process.env.NODE_ENV === 'development') {
-    store = new session.MemoryStore;
+    store = new session.MemoryStore();
 } else {
     store = new MongoDBStore({
         uri: process.env.MONGO_URI,
-        collection: 'sessions'
+        collection: 'sessions',
     });
     store.on('error', function(error) {
         assert.ifError(error);
