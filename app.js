@@ -23,7 +23,8 @@ const Token = require('./models/token');
 
 
 // const store = new session.MemoryStore;
-const { assert } = require('console');
+// const { assert } = require('console'); <--DELETE
+const assert = require('assert').strict;
 
 
 let store;
@@ -36,12 +37,12 @@ if (process.env.NODE_ENV === 'development') {
     });
     // store.on('error', function(error) {
     store.on('error', function(error) {
-        try {
-            assert.ifError(error);
-            assert.ok(false);
-        } catch (error) {
-            console.log("Error:", error)
-        }
+        // try {
+        assert.ifError(error);
+        assert.ok(false);
+        // } catch (error) {
+        //     console.log("Error:", error)
+        // }
     });
 }
 
