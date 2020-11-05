@@ -35,14 +35,9 @@ if (process.env.NODE_ENV === 'development') {
         uri: process.env.MONGO_URI,
         collection: 'sessions',
     });
-    // store.on('error', function(error) {
     store.on('error', function(error) {
-        // try {
         assert.ifError(error);
         assert.ok(false);
-        // } catch (error) {
-        //     console.log("Error:", error)
-        // }
     });
 }
 
@@ -63,11 +58,7 @@ const usuario = require('./models/usuario');
 // const { assert } = require('console');
 // const { Token } = require('morgan');
 
-// Desarrollo
-// var mongoDB = 'mongodb://localhost/red_bicicletas';
 
-// Produccion
-// var mongoDB = 'mongodb+srv://redBici:IlzI5Vv5Bf3Kjua7@cluster0.aqw1v.mongodb.net/red_bicicletas';
 var mongoDB = process.env.MONGO_URI;
 mongoose.connect(mongoDB, { userNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = global.Promise;
@@ -161,8 +152,7 @@ app.post('/resetPassword', function(req, res) {
         usuario.password = req.body.password;
         usuario.save(function(err) {
             if (err) {
-                // res.render('session/resetPassword', (errors: err.errors, usuario: new Usuario({ email: req.body.email })
-                // });
+                res.render("session/resetPassword", { errors: err.errors, usuario: new Usuario({ email: req.body.email }), });
             } else {
                 res.redirect('/login');
             }
@@ -171,6 +161,8 @@ app.post('/resetPassword', function(req, res) {
 });
 
 
+app.use('/', indexRouter);
+// app.use('/users', usersRouter);
 
 app.use('/usuarios', usuariosRouter);
 app.use('/token', tokenRouter);
@@ -193,8 +185,10 @@ app.get('/auth/google',
     passport.authenticate('google', {
         scope: [
             'https://www.googleapis.com/auth/plus.login',
-            'https://www.googleapis.com/auth/plus.profile.emails.read'
-        ]
+            'https://www.googleapis.com/auth/plus.profile.emails.read',
+            'profile',
+            'email'
+        ],
     }));
 
 app.get('/auth/google/callback', passport.authenticate('google', {
@@ -204,20 +198,14 @@ app.get('/auth/google/callback', passport.authenticate('google', {
 
 
 
-app.use('/', indexRouter);
-
-// catch 404 and forward to error handler
+// error handler
 app.use(function(req, res, next) {
     next(createError(404));
 });
-
-// error handler
 app.use(function(err, req, res, next) {
-    // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    // render the error page
     res.status(err.status || 500);
     res.render('error');
 });
@@ -243,7 +231,5 @@ function validarUsuario(req, res, next) {
         }
     });
 }
-
-
 
 module.exports = app;
