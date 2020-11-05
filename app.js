@@ -32,7 +32,8 @@ if (process.env.NODE_ENV === 'development') {
         uri: process.env.MONGO_URI,
         collection: 'sessions',
     });
-    store.on('error', function(error) {
+    // store.on('error', function(error) {
+    store.on('error', function ifErrorFrame() {
         assert.ifError(error);
         assert.ok(false);
     });
