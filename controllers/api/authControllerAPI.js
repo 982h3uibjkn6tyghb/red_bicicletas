@@ -34,31 +34,29 @@ module.exports = {
         });
     },
 
-    // forgotPassword: function(req, res, next) {
-    //     const { email } = req.body;
-    //     Usuario.findOne({ email }, function(err, userInfo) {
-    //         if (!userInfo)
-    //             return res.status(401).json({ message: "No existe el usuario", data: null });
-    //         userInfo.resetPassword(function(err) {
-    //             if (err) return next(err);
-    //             res.status(200).json({
-    //                 message: `Se envió un mensaje a ${email} para reestablecer la contraseña`,
-    //                 data: null,
-    //             });
-    //         });
-    //     });
-    // },
-    // authFacebookToken: function(req, res, next) {
-    //     if (req.user) {
-    //         req.user.save().then(() => {
-    //             const token = jwt.sign({ id: req.user.id }, req.app.get('secretKey'), { expiresIn: '7d' });
-    //             res.status(200).json({ message: "Usuario encontrado", data: { user: req.user, token: token } });
-    //         }).catch((err) => {
-    //             console.log(err);
-    //             res.status(500).json({ message: err.message });
-    //         });
-    //     } else {
-    //         res.status(401);
-    //     }
-    // }
+    forgotPassword: function(req, res, next) {
+        // const { email } = req.body;
+        // Usuario.findOne({ email }, function(err, userInfo) {
+        Usuario.findOne({ email: req.body.email }, function(err, usuario) {
+            if (!usuario) return res.status(401).json({ message: "No existe el usuario", data: null });
+            usuario.resetPassword(function(err) {
+                if (err) { return next(err); }
+                // res.status(200).json({ message: "Se envió un mensaje a ${email} para reestablecer la contraseña`,
+                res.status(200).json({ message: "Se envió un mensaje para reestablecer la contraseña", data: null, });
+            });
+        });
+    },
+    authFacebookToken: function(req, res, next) {
+        if (req.user) {
+            req.user.save().then(() => {
+                const token = jwt.sign({ id: req.user.id }, req.app.get('secretKey'), { expiresIn: '7d' });
+                res.status(200).json({ message: "Usuario encontrado o creado!", data: { user: req.user, token: token } });
+            }).catch((err) => {
+                console.log(err);
+                res.status(500).json({ message: err.message });
+            });
+        } else {
+            res.status(401);
+        }
+    },
 };
