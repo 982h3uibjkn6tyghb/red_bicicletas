@@ -33,7 +33,7 @@ var usuarioSchema = new Schema({
     },
     password: {
         type: String,
-        required: [true, 'El password es obligatorio']
+        required: [true, 'El password es obligatorio.']
     },
     passwordResetToken: String,
     passwordResetTokenExpires: Date,
