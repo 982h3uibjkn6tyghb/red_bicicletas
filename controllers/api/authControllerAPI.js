@@ -25,16 +25,6 @@ module.exports = {
     },
 
     forgotPassword: function(req, res, next) {
-        Usuario.findOne({ email: req.body.email }, function(err, usuario) {
-            if (!usuario) return res.status(401).json({ message: "No existe el usuario", data: null });
-            usuario.resetPassword(function(err) {
-                if (err) { return next(err); }
-                res.status(200).json({ message: "Se envio un email para reestablecer el password" });
-            });
-        });
-    },
-
-    forgotPassword: function(req, res, next) {
         // const { email } = req.body;
         // Usuario.findOne({ email }, function(err, userInfo) {
         Usuario.findOne({ email: req.body.email }, function(err, usuario) {
